@@ -3,11 +3,15 @@
 // import
 //----------------------------------------------------------
 // npm
-const co = require('co')
+const co     = require('co')
 const globby = require('globby')
-const isexe = require('isexe')
+const isexe  = require('isexe')
 
 // local
+const age     = require('./lib/age')
+const dirSize = require('./lib/dir-size')
+const proms   = require('./lib/proms')
+const size    = require('./lib/size')
 
 // jsdoc
 function* globStats(glob, opts) {
@@ -30,11 +34,11 @@ function* globStats(glob, opts) {
   // get paths and stats from glob
   //----------------------------------------------------------
   const paths = yield globby(glob)
-  const stats = yield Promise.all(paths.map(path => getStats(path)))
+  const stats = yield proms.P.all(paths.map(path => proms.getStats(path)))
 
   // filter paths and stats into output
   //----------------------------------------------------------
-  yield Promise.map(stats, co.wrap(function* (stat, i) {
+  yield proms.P.map(stats, co.wrap(function* (stat, i) {
 
     const path = paths[i]
 
@@ -44,7 +48,7 @@ function* globStats(glob, opts) {
       }
 
     else if (stat.isSymbolicLink()) {
-      out.contents.symlinks[path] = yield linkTarget(path)
+      out.contents.symlinks[path] = yield proms.linkTarget(path)
       out.contents.symlinks[path].stats = stat
     }
 
