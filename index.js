@@ -20,7 +20,6 @@ const fSize = Promise.promisify(folderSize)
 
 // top level vars
 //----------------------------------------------------------
-const now = Date.now()
 
 // jsdoc
 function* linkTarget(path) {
@@ -34,19 +33,6 @@ function* linkTarget(path) {
     target.type = (yield isexe(relTarget)) ? 'exe' : 'file'
 
   return target
-}
-
-// jsdoc
-function age(mtime) {
-  const diff = now - mtime
-  const opts =
-    { secDecimalDigits: 0
-    , verbose: true
-    }
-  return {
-    raw: diff
-  , pretty: ms(diff, opts).split(' ').slice(0, 4).join(' ')
-  }
 }
 
 function size(raw) {
@@ -87,6 +73,8 @@ function* globContents(potentialGlob) {
       }
     }
 
+  const now = Date.now()
+
   // get paths and stats from glob
   //----------------------------------------------------------
   const paths = yield globby(glob)
@@ -99,7 +87,7 @@ function* globContents(potentialGlob) {
     const path = paths[i]
 
     if (stat.isDirectory()) out.contents.dirs[path] =
-      { age: age(stat.mtime)
+      { age: age(now, stat.mtime)
       , size: yield dirSize(path)
       }
 
@@ -110,11 +98,11 @@ function* globContents(potentialGlob) {
 
     else if (stat.isFile()) (yield isexe(path))
       ? out.contents.exes[path] =
-          { age: age(stat.mtime)
+          { age: age(now, stat.mtime)
           , size: size(stat.size)
           }
       : out.contents.files[path] =
-          { age: age(stat.mtime)
+          { age: age(now, stat.mtime)
           , size: size(stat.size)
           }
   }))
