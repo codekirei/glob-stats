@@ -1,0 +1,33 @@
+{
+  "name": "glob-stats",
+  "version": "0.1.0",
+  "description": "promisified file globbing with additional stats",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codekirei/glob-stats.git"
+  },
+  "keywords": [
+    "glob",
+    "stats",
+    "fs"
+  ],
+  "author": "Jacob Blakely (codekirei)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codekirei/glob-stats/issues"
+  },
+  "homepage": "https://github.com/codekirei/glob-stats#readme",
+  "dependencies": {
+    "bluebird": "^3.3.1",
+    "co": "^4.6.0",
+    "get-folder-size": "^1.0.0",
+    "globby": "^4.0.0",
+    "isexe": "^1.1.2",
+    "pretty-bytes": "^3.0.1",
+    "pretty-ms": "^2.1.0"
+  }
+}
