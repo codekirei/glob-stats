@@ -3,20 +3,16 @@
 // import
 //----------------------------------------------------------
 const Promise    = require('bluebird')
-const bytes      = require('pretty-bytes')
 const co         = require('co')
-const folderSize = require('get-folder-size')
 const fs         = require('fs')
 const globby     = require('globby')
 const isexe      = require('isexe')
-const ms         = require('pretty-ms')
 const p          = require('path')
 
 // promisification
 //----------------------------------------------------------
 const getStats = Promise.promisify(fs.lstat)
 const readLink = Promise.promisify(fs.readlink)
-const fSize = Promise.promisify(folderSize)
 
 // top level vars
 //----------------------------------------------------------
@@ -33,21 +29,6 @@ function* linkTarget(path) {
     target.type = (yield isexe(relTarget)) ? 'exe' : 'file'
 
   return target
-}
-
-function size(raw) {
-  return {
-    raw
-  , pretty: bytes(raw)
-  }
-}
-
-function* dirSize(path) {
-  const raw = yield fSize(path)
-  return {
-    raw
-  , pretty: bytes(raw)
-  }
 }
 
 // jsdoc
