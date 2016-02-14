@@ -1,13 +1,14 @@
 functionality:
-  - opts.age
-  - opts.size
+  - err handling
 
 tests:
-  - dir-size.js
-  - link-target.js
-  - index.js
+  - cached-parser
+  - dir-size
+  - link-target
+  - index
 
 meta:
+  - docstrings
   - readme
   - ci
   - 0.1.0 -> npm publish

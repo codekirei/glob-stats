@@ -3,20 +3,18 @@
 // import
 //----------------------------------------------------------
 // npm
-const co     = require('co')
+const co = require('co')
 const globby = require('globby')
-const isexe  = require('isexe')
+const isexe = require('isexe')
 
 // local
-const age     = require('./lib/age')
-const dirSize = require('./lib/dir-size')
-const proms   = require('./lib/proms')
-const size    = require('./lib/size')
+const cachedParser = require('./lib/cached-parser')
+const proms = require('./lib/proms')
 
 // jsdoc
 function* globStats(glob, opts) {
 
-  // create output skeleton
+  // create output skeleton (will flesh out contents below)
   //----------------------------------------------------------
   const out =
     { glob
@@ -29,38 +27,44 @@ function* globStats(glob, opts) {
       }
     }
 
-  const now = Date.now()
-
   // get paths and stats from glob
   //----------------------------------------------------------
   const paths = yield globby(glob)
   const stats = yield proms.P.all(paths.map(path => proms.getStats(path)))
 
-  // filter paths and stats into output
+  // generate stat parsing fn based on opts
+  //----------------------------------------------------------
+  const parseStat = cachedParser(opts)
+
+  // filter paths into output
   //----------------------------------------------------------
   yield proms.P.map(stats, co.wrap(function* (stat, i) {
 
+    // grab path associated with stats
     const path = paths[i]
 
-    if (stat.isDirectory()) out.contents.dirs[path] =
-      { age: age(now, stat.mtime)
-      , size: yield dirSize(path)
-      }
-
-    else if (stat.isSymbolicLink()) {
-      out.contents.symlinks[path] = yield proms.linkTarget(path)
-      out.contents.symlinks[path].stats = stat
+    // convenience fn to add path to out.contents
+    function* addTo(type, promise) {
+      return promise
+        ? out.contents[type][path] = yield promise
+        : out.contents[type][path] = yield parseStat(stat)
     }
 
-    else if (stat.isFile()) (yield isexe(path))
-      ? out.contents.exes[path] =
-          { age: age(now, stat.mtime)
-          , size: size(stat.size)
-          }
-      : out.contents.files[path] =
-          { age: age(now, stat.mtime)
-          , size: size(stat.size)
-          }
+    // handle dir/symlink/file/exe
+    if (stat.isDirectory())
+      return yield addTo('dirs', parseStat(stat, path))
+
+    if (stat.isSymbolicLink())
+      return yield addTo('symlinks', Object.assign(
+        {}
+      , yield proms.linkTarget(path)
+      , yield parseStat(stat)
+      ))
+
+    if (stat.isFile())
+      return (yield isexe(path))
+        ? yield addTo('exes')
+        : yield addTo('files')
   }))
 
   // return constructed output
