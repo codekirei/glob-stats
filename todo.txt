@@ -1,0 +1,13 @@
+functionality:
+  - opts.age
+  - opts.size
+
+tests:
+  - dir-size.js
+  - link-target.js
+  - index.js
+
+meta:
+  - readme
+  - ci
+  - 0.1.0 -> npm publish
