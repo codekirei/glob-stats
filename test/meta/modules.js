@@ -7,6 +7,7 @@
 //----------------------------------------------------------
 global.withFixtures = require('fixtures-fs')
 global.bytes = require('pretty-bytes')
+global.ms = require('pretty-ms')
 
 // chai
 const chai = require('chai')
