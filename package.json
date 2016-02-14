@@ -34,6 +34,7 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^5.2.0",
     "coffee-script": "^1.10.0",
+    "fixtures-fs": "^2.0.0",
     "istanbul": "^0.4.2",
     "mocha": "^2.4.5",
     "sinon": "^1.17.3"

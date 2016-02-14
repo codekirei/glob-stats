@@ -5,6 +5,9 @@
 
 // npm
 //----------------------------------------------------------
+global.withFixtures = require('fixtures-fs')
+global.bytes = require('pretty-bytes')
+
 // chai
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
