@@ -1,5 +1,6 @@
 functionality:
   - err handling
+  - add symlink type to link target
 
 tests:
   - cached-parser

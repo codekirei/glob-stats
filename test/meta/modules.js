@@ -8,6 +8,7 @@
 global.withFixtures = require('fixtures-fs')
 global.bytes = require('pretty-bytes')
 global.ms = require('pretty-ms')
+global.co = require('co')
 
 // chai
 const chai = require('chai')
@@ -31,6 +32,7 @@ global.clock = clock()
 //----------------------------------------------------------
 global.globStats = require('../..')
 global.age = require('../../lib/age')
+global.cachedParser = require('../../lib/cached-parser')
 global.dirSize = require('../../lib/dir-size')
 global.linkTarget = require('../../lib/link-target')
 global.proms = require('../../lib/proms')
