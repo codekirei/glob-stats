@@ -3,7 +3,6 @@ functionality:
   - add symlink type to link target
 
 tests:
-  - dir-size
   - link-target
   - index
 

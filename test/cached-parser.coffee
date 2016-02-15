@@ -34,7 +34,7 @@ describe 'cached-parser :', ->
       size:
         raw: stat.size
         pretty: bytes stat.size
-    , yield cachedParser(size: true) stat, './foo'
+    , yield cachedParser(size: true) stat, '.'
     )
     proms.folderSize.restore()
 
