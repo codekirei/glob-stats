@@ -1,17 +1,57 @@
 describe 'cached-parser :', ->
 
+  # ----------------------------------------------------------
+  # shared vars
+  # ----------------------------------------------------------
+
+  stat =
+    size: 42
+    mtime: 0
+
+  # ----------------------------------------------------------
+  # cases
+  # ----------------------------------------------------------
+
   it 'no opts', ->
-    assert.eventually.equal cachedParser()(), true
+    assert.equal(
+      yield cachedParser()()
+    , true
+    )
+
+  # ----------------------------------------------------------
 
   it 'opts.size for file', ->
-    sizeNum = 200
-    stat = size: sizeNum
-    expected = size: size stat.size
-    actual = co(cachedParser(size: true)(stat))
-    assert.eventually.deepEqual actual, expected
+    assert.deepEqual(
+      size: size stat.size
+    , yield cachedParser(size: true) stat
+    )
 
-  it 'opts.size for dir'
+  # ----------------------------------------------------------
 
-  it 'opts.age'
+  it 'opts.size for dir', ->
+    sinon.stub(proms, 'folderSize').returns(Promise.resolve stat.size)
+    assert.deepEqual(
+      size:
+        raw: stat.size
+        pretty: bytes stat.size
+    , yield cachedParser(size: true) stat, './foo'
+    )
+    proms.folderSize.restore()
 
-  it 'opts.size and opts.age'
+  # ----------------------------------------------------------
+
+  it 'opts.age', ->
+    clock.freeze()
+    clock.tick(10000000000)
+    assert.deepEqual(
+      age: age new Date(), stat.mtime
+    , cachedParser(age: true) stat
+    )
+    clock.restore()
+
+  # ----------------------------------------------------------
+
+  it 'opts.size and opts.age', ->
+    ob = yield cachedParser(age: true, size: true) stat
+    assert.property(ob, 'age')
+    assert.property(ob, 'size')

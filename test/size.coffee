@@ -1,4 +1,5 @@
-describe 'size', ->
+describe 'size :', ->
+
   it 'return {raw: <Number>, pretty: <String>}', ->
     byteCt = 10
     actual = size byteCt

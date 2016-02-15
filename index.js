@@ -55,11 +55,14 @@ function* globStats(glob, opts) {
       return yield addTo('dirs', parseStat(stat, path))
 
     if (stat.isSymbolicLink())
-      return yield addTo('symlinks', Object.assign(
-        {}
-      , yield proms.linkTarget(path)
-      , yield parseStat(stat)
-      ))
+      return yield addTo(
+        'symlinks'
+      , Object.assign(
+          {}
+        , yield proms.linkTarget(path)
+        , yield parseStat(stat)
+        )
+      )
 
     if (stat.isFile())
       return (yield isexe(path))

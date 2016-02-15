@@ -1,11 +1,15 @@
-describe 'age', ->
+describe 'age :', ->
+
+  # ----------------------------------------------------------
+  # hooks
+  # ----------------------------------------------------------
 
   beforeEach -> clock.freeze()
   afterEach -> clock.restore()
 
-  msOpts =
-    secDecimalDigits: 0
-    verbose: true
+  # ----------------------------------------------------------
+  # cases
+  # ----------------------------------------------------------
 
   it 'return {raw: <Number>, pretty: <String>}', ->
 
@@ -21,6 +25,8 @@ describe 'age', ->
     actual = age timeB, timeA
 
     assert.deepEqual actual, expected
+
+  # ----------------------------------------------------------
 
   it 'only use first 2 units in pretty string', ->
 

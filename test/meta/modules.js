@@ -5,16 +5,10 @@
 
 // npm
 //----------------------------------------------------------
-global.withFixtures = require('fixtures-fs')
+global.assert = require('chai').assert
 global.bytes = require('pretty-bytes')
-global.ms = require('pretty-ms')
 global.co = require('co')
-
-// chai
-const chai = require('chai')
-const chaiAsPromised = require('chai-as-promised')
-chai.use(chaiAsPromised)
-global.assert = chai.assert
+global.ms = require('pretty-ms')
 
 // sinon
 const sinon = require('sinon')
