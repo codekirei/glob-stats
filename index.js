@@ -5,11 +5,12 @@
 // npm
 const co = require('co')
 const globby = require('globby')
-const isexe = require('isexe')
 
 // local
 const cachedParser = require('./lib/cached-parser')
+const linkTarget = require('./lib/link-target')
 const proms = require('./lib/proms')
+const statType = require('./lib/stat-type')
 
 // jsdoc
 function* globStats(glob, opts) {
@@ -20,10 +21,10 @@ function* globStats(glob, opts) {
     { glob
     , root: glob.slice(0, glob.indexOf('*'))
     , contents:
-      { files: {}
-      , exes: {}
-      , dirs: {}
-      , symlinks: {}
+      { file: {}
+      , exe: {}
+      , dir: {}
+      , symlink: {}
       }
     }
 
@@ -36,42 +37,39 @@ function* globStats(glob, opts) {
   //----------------------------------------------------------
   const parseStat = cachedParser(opts)
 
-  // filter paths into output
+  // push paths into output
   //----------------------------------------------------------
   yield proms.P.map(stats, co.wrap(function* (stat, i) {
 
-    // grab path associated with stats
     const path = paths[i]
+    const type = yield statType(stat, path)
 
-    // convenience fn to add path to out.contents
-    function* addTo(type, promise) {
-      return promise
-        ? out.contents[type][path] = yield promise
-        : out.contents[type][path] = yield parseStat(stat)
+    function* handler() {
+      return yield parseStat(stat)
     }
 
-    // handle dir/symlink/file/exe
-    if (stat.isDirectory())
-      return yield addTo('dirs', parseStat(stat, path))
+    function* dirHandler() {
+      return yield parseStat(stat, path)
+    }
 
-    if (stat.isSymbolicLink())
-      return yield addTo(
-        'symlinks'
-      , Object.assign(
-          {}
-        , yield proms.linkTarget(path)
-        , yield parseStat(stat)
-        )
+    function* symlinkHandler() {
+      return Object.assign(
+        {}
+      , yield linkTarget(path)
+      , yield parseStat(stat)
       )
+    }
 
-    if (stat.isFile())
-      return (yield isexe(path))
-        ? yield addTo('exes')
-        : yield addTo('files')
+    const typeHandler =
+      { file: handler
+      , exe: handler
+      , dir: dirHandler
+      , symlink: symlinkHandler
+      }
+
+    out.contents[type][path] = yield typeHandler[type]()
   }))
 
-  // return constructed output
-  //----------------------------------------------------------
   return out
 }
 

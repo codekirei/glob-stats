@@ -12,7 +12,7 @@ describe 'cached-parser :', ->
   # cases
   # ----------------------------------------------------------
 
-  it 'no opts', ->
+  it 'neither size nor age', ->
     assert.equal(
       yield cachedParser()()
     , true
@@ -20,7 +20,7 @@ describe 'cached-parser :', ->
 
   # ----------------------------------------------------------
 
-  it 'opts.size for file', ->
+  it 'just size (file)', ->
     assert.deepEqual(
       size: size stat.size
     , yield cachedParser(size: true) stat
@@ -28,7 +28,7 @@ describe 'cached-parser :', ->
 
   # ----------------------------------------------------------
 
-  it 'opts.size for dir', ->
+  it 'just size (dir)', ->
     sinon.stub(proms, 'folderSize').returns(Promise.resolve stat.size)
     assert.deepEqual(
       size:
@@ -40,7 +40,7 @@ describe 'cached-parser :', ->
 
   # ----------------------------------------------------------
 
-  it 'opts.age', ->
+  it 'just age', ->
     clock.freeze()
     clock.tick(10000000000)
     assert.deepEqual(
@@ -51,7 +51,7 @@ describe 'cached-parser :', ->
 
   # ----------------------------------------------------------
 
-  it 'opts.size and opts.age', ->
+  it 'both size and age', ->
     ob = yield cachedParser(age: true, size: true) stat
     assert.property(ob, 'age')
     assert.property(ob, 'size')
