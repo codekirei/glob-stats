@@ -28,20 +28,19 @@ function* globStats(glob, opts) {
       }
     }
 
-  // get paths and stats from glob
-  //----------------------------------------------------------
-  const paths = yield globby(glob)
-  const stats = yield proms.P.all(paths.map(path => proms.getStats(path)))
-
-  // generate stat parsing fn based on opts
+  // cache stat parsing fn based on opts
   //----------------------------------------------------------
   const parseStat = cachedParser(opts)
 
-  // push paths into output
+  // get paths from glob
   //----------------------------------------------------------
-  yield proms.P.map(stats, co.wrap(function* (stat, i) {
+  const paths = yield globby(glob)
 
-    const path = paths[i]
+  // parse paths and filter into output
+  //----------------------------------------------------------
+  for (const path of paths) {
+
+    const stat = yield proms.getStats(path)
     const type = yield statType(stat, path)
 
     function* handler() { return yield parseStat(stat) }
@@ -56,15 +55,15 @@ function* globStats(glob, opts) {
       )
     }
 
-    const typeHandler =
+    const handlers =
       { file: handler
       , exe: handler
       , dir: dirHandler
       , symlink: symlinkHandler
       }
 
-    out.contents[type][path] = yield typeHandler[type]()
-  }))
+    out.contents[type][path] = yield handlers[type]()
+  }
 
   // return completed output
   //----------------------------------------------------------
