@@ -11,6 +11,17 @@ describe 'stat-type :', ->
 
   stat = (ob) -> Object.assign {}, base, ob
 
+  mocked = false
+
+  # ----------------------------------------------------------
+  # hooks
+  # ----------------------------------------------------------
+
+  afterEach ->
+    if mocked
+      mocked = false
+      mock.restore()
+
   # ----------------------------------------------------------
   # cases
   # ----------------------------------------------------------
@@ -18,7 +29,6 @@ describe 'stat-type :', ->
   it 'dir', -> t.equal
     have: yield statType stat isDirectory: -> true
     want: 'dir'
-
 
   # ----------------------------------------------------------
 
@@ -30,12 +40,11 @@ describe 'stat-type :', ->
 
   it 'file', ->
 
-    mock file: mock.file mode: 644
-    have = yield statType stat(isFile: -> true), 'file'
-    mock.restore()
+    mock file: mock.file()
+    mocked = true
 
     t.equal
-      have: have
+      have: yield statType stat(isFile: -> true), 'file'
       want: 'file'
 
   # ----------------------------------------------------------
@@ -43,9 +52,8 @@ describe 'stat-type :', ->
   it 'exe', ->
 
     mock exe: mock.file mode: 755
-    have = yield statType stat(isFile: -> true), 'exe'
-    mock.restore()
+    mocked = true
 
     t.equal
-      have: have
+      have: yield statType stat(isFile: -> true), 'exe'
       want: 'exe'

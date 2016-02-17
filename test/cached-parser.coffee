@@ -9,6 +9,15 @@ describe 'cached-parser :', ->
     mtime: 0
 
   # ----------------------------------------------------------
+  # hooks
+  # ----------------------------------------------------------
+
+  afterEach ->
+    [ proms.folderSize
+    , clock
+    ].forEach (stub) -> if stub.restore then stub.restore()
+
+  # ----------------------------------------------------------
   # cases
   # ----------------------------------------------------------
 
@@ -27,11 +36,9 @@ describe 'cached-parser :', ->
   it 'just size (dir)', ->
 
     sinon.stub(proms, 'folderSize').returns(Promise.resolve stat.size)
-    have = yield cachedParser(size: true) stat, '.'
-    proms.folderSize.restore()
 
     t.deepEqual
-      have: have
+      have: yield cachedParser(size: true) stat, '.'
       want:
         size:
           raw: stat.size
@@ -47,8 +54,6 @@ describe 'cached-parser :', ->
     t.deepEqual
       have: cachedParser(age: true) stat
       want: age: age new Date(), stat.mtime
-
-    clock.restore()
 
   # ----------------------------------------------------------
 

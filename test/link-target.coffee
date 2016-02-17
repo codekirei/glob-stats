@@ -25,8 +25,8 @@ describe 'link-target :', ->
   # cases
   # ----------------------------------------------------------
 
-  it 'return {target: {path: <String>, type: <String>}}',
-    -> t.deepEqual
+  it 'return {target: {path: <String>, type: <String>}}', ->
+    t.deepEqual
       have: yield linkTarget()
       want:
         target:
