@@ -44,13 +44,9 @@ function* globStats(glob, opts) {
     const path = paths[i]
     const type = yield statType(stat, path)
 
-    function* handler() {
-      return yield parseStat(stat)
-    }
+    function* handler() { return yield parseStat(stat) }
 
-    function* dirHandler() {
-      return yield parseStat(stat, path)
-    }
+    function* dirHandler() { return yield parseStat(stat, path) }
 
     function* symlinkHandler() {
       return Object.assign(
@@ -70,6 +66,8 @@ function* globStats(glob, opts) {
     out.contents[type][path] = yield typeHandler[type]()
   }))
 
+  // return completed output
+  //----------------------------------------------------------
   return out
 }
 
