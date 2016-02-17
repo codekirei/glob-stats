@@ -57,3 +57,8 @@ describe 'stat-type :', ->
     t.equal
       have: yield statType stat(isFile: -> true), 'exe'
       want: 'exe'
+
+  # ----------------------------------------------------------
+
+  it 'undefined', -> t.isUndefined
+    have: yield statType base

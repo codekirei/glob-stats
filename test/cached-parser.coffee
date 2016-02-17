@@ -59,7 +59,11 @@ describe 'cached-parser :', ->
 
   it 'both size and age', ->
 
-    have = yield cachedParser(opts = age: true, size: true) stat
+    opts =
+      age: true
+      size: true
+
+    have = yield cachedParser(opts) stat
 
     test = (k) -> t.property
       have: have
