@@ -7,7 +7,7 @@ const co = require('co')
 const globby = require('globby')
 
 // local
-const cachedParser = require('./lib/cached-parser')
+const cache = require('./lib/cache')
 const linkTarget = require('./lib/link-target')
 const proms = require('./lib/proms')
 const statType = require('./lib/stat-type')
@@ -30,7 +30,7 @@ function* globStats(glob, opts) {
 
   // cache stat parsing fn based on opts
   //----------------------------------------------------------
-  const parseStat = cachedParser(opts)
+  const parseStat = cache.parseStat(opts)
 
   // get paths from glob
   //----------------------------------------------------------

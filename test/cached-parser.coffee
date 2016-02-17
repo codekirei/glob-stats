@@ -1,72 +1,76 @@
-describe 'cached-parser :', ->
+describe 'cache :', ->
 
-  # ----------------------------------------------------------
-  # shared
-  # ----------------------------------------------------------
+  describe 'statParser :', ->
 
-  stat =
-    size: 42
-    mtime: 0
+    # ----------------------------------------------------------
+    # shared
+    # ----------------------------------------------------------
 
-  # ----------------------------------------------------------
-  # hooks
-  # ----------------------------------------------------------
+    fn = cache.parseStat
 
-  afterEach ->
-    [ proms.folderSize
-    , clock
-    ].forEach (stub) -> if stub.restore then stub.restore()
+    stat =
+      size: 42
+      mtime: 0
 
-  # ----------------------------------------------------------
-  # cases
-  # ----------------------------------------------------------
+    # ----------------------------------------------------------
+    # hooks
+    # ----------------------------------------------------------
 
-  it 'neither size nor age', -> t.equal
-    have: yield cachedParser()()
-    want: true
+    afterEach ->
+      [ proms.folderSize
+      , clock
+      ].forEach (stub) -> if stub.restore then stub.restore()
 
-  # ----------------------------------------------------------
+    # ----------------------------------------------------------
+    # cases
+    # ----------------------------------------------------------
 
-  it 'just size (file)', -> t.deepEqual
-    have: yield cachedParser(size: true) stat
-    want: size: size stat.size
+    it 'neither size nor age', -> t.equal
+      have: yield fn()()
+      want: true
 
-  # ----------------------------------------------------------
+    # ----------------------------------------------------------
 
-  it 'just size (dir)', ->
+    it 'just size (file)', -> t.deepEqual
+      have: yield fn(size: true) stat
+      want: size: size stat.size
 
-    sinon.stub(proms, 'folderSize').returns(Promise.resolve stat.size)
+    # ----------------------------------------------------------
 
-    t.deepEqual
-      have: yield cachedParser(size: true) stat, '.'
-      want:
-        size:
-          raw: stat.size
-          pretty: bytes stat.size
+    it 'just size (dir)', ->
 
-  # ----------------------------------------------------------
+      sinon.stub(proms, 'folderSize').returns(Promise.resolve stat.size)
 
-  it 'just age', ->
+      t.deepEqual
+        have: yield fn(size: true) stat, '.'
+        want:
+          size:
+            raw: stat.size
+            pretty: bytes stat.size
 
-    clock.freeze()
-    clock.tick(10000000000)
+    # ----------------------------------------------------------
 
-    t.deepEqual
-      have: cachedParser(age: true) stat
-      want: age: age new Date(), stat.mtime
+    it 'just age', ->
 
-  # ----------------------------------------------------------
+      clock.freeze()
+      clock.tick(10000000000)
 
-  it 'both size and age', ->
+      t.deepEqual
+        have: yield fn(age: true) stat
+        want: age: age new Date(), stat.mtime
 
-    opts =
-      age: true
-      size: true
+    # ----------------------------------------------------------
 
-    have = yield cachedParser(opts) stat
+    it 'both size and age', ->
 
-    test = (k) -> t.property
-      have: have
-      want: k
+      opts =
+        age: true
+        size: true
 
-    test k for k in Object.keys opts
+      have = yield fn(opts) stat
+
+      test = (k) -> t.property
+        have: have
+        want: k
+
+      test k for k in Object.keys opts
