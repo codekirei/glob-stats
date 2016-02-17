@@ -40,7 +40,7 @@ global.clock = clock()
 //----------------------------------------------------------
 global.globStats = require('../..')
 global.age = require('../../lib/age')
-global.cache = require('../../lib/cache')
+global.parseStat = require('../../lib/parse-stat')
 global.dirSize = require('../../lib/dir-size')
 global.linkTarget = require('../../lib/link-target')
 global.proms = require('../../lib/proms')
