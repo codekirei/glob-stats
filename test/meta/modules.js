@@ -3,6 +3,10 @@
 // require modules used in testing and add to global object
 // this file is injected by mocha.opts
 
+// node
+//----------------------------------------------------------
+global.p = require('path')
+
 // npm
 //----------------------------------------------------------
 global.bytes = require('pretty-bytes')
