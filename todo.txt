@@ -1,7 +1,9 @@
 functionality:
   - err handling
+  - remove unnecessary co-wraps (dir-size?)
 
 tests:
+  - stat-type
   - link-target
   - index
 

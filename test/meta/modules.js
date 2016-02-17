@@ -9,6 +9,7 @@ global.assert = require('chai').assert
 global.bytes = require('pretty-bytes')
 global.co = require('co')
 global.ms = require('pretty-ms')
+global.mock = require('mock-fs')
 
 // sinon
 const sinon = require('sinon')
@@ -31,3 +32,4 @@ global.dirSize = require('../../lib/dir-size')
 global.linkTarget = require('../../lib/link-target')
 global.proms = require('../../lib/proms')
 global.size = require('../../lib/size')
+global.statType = require('../../lib/stat-type')
