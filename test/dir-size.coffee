@@ -1,7 +1,7 @@
 describe 'dir-size :', ->
 
   # ----------------------------------------------------------
-  # shared vars
+  # shared
   # ----------------------------------------------------------
 
   num = 42
@@ -20,9 +20,8 @@ describe 'dir-size :', ->
   # cases
   # ----------------------------------------------------------
 
-  it 'return {raw: <Number>, pretty: <String}', ->
-    assert.deepEqual(
+  it 'return {raw: <Number>, pretty: <String}', -> t.deepEqual
+    have: yield dirSize()
+    want:
       raw: num
       pretty: bytes num
-    , yield dirSize()
-    )

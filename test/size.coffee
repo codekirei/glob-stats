@@ -1,9 +1,17 @@
 describe 'size :', ->
 
-  it 'return {raw: <Number>, pretty: <String>}', ->
-    byteCt = 10
-    actual = size byteCt
-    expected =
+  # ----------------------------------------------------------
+  # shared
+  # ----------------------------------------------------------
+
+  byteCt = 10
+
+  # ----------------------------------------------------------
+  # cases
+  # ----------------------------------------------------------
+
+  it 'return {raw: <Number>, pretty: <String>}', -> t.deepEqual
+    have: size byteCt
+    want:
       raw: byteCt
       pretty: bytes byteCt
-    assert.deepEqual actual, expected

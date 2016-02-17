@@ -5,11 +5,18 @@
 
 // npm
 //----------------------------------------------------------
-global.assert = require('chai').assert
 global.bytes = require('pretty-bytes')
 global.co = require('co')
 global.ms = require('pretty-ms')
 global.mock = require('mock-fs')
+
+// assertions
+const assert = require('chai').assert
+global.t = () => {
+  const fns = {}
+  for (const fn in assert) fns[fn] = ob => assert[fn](ob.have, ob.want)
+  return fns
+}()
 
 // sinon
 const sinon = require('sinon')

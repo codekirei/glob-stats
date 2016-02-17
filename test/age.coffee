@@ -18,13 +18,11 @@ describe 'age :', ->
     clock.tick(diff)
     timeB = new Date()
 
-    expected =
-      raw: diff
-      pretty: '1 second'
-
-    actual = age timeB, timeA
-
-    assert.deepEqual actual, expected
+    t.deepEqual
+      have: age timeB, timeA
+      want:
+        raw: diff
+        pretty: '1 second'
 
   # ----------------------------------------------------------
 
@@ -35,10 +33,8 @@ describe 'age :', ->
     clock.tick(diff)
     timeB = new Date()
 
-    expected =
-      raw: diff
-      pretty: '1 day 6 hours'
-
-    actual = age timeB, timeA
-
-    assert.deepEqual actual, expected
+    t.deepEqual
+      have: age timeB, timeA
+      want:
+        raw: diff
+        pretty: '1 day 6 hours'
