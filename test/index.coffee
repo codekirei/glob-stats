@@ -5,21 +5,34 @@ describe 'index :', ->
   # ----------------------------------------------------------
 
   glob = 'globDir/*'
-  path = 'file'
+
+  statBase =
+    isDirectory: -> false
+    isSymbolicLink: -> false
+    isFile: -> false
+
+  stat = (ob) -> Object.assign {}, statBase, ob
+
+  typeMap =
+    'globDir/dir': stat isDirectory: -> true
+    'globDir/file': stat isFile: -> true
+    'globDir/exe': stat isFile: -> true
 
   # ----------------------------------------------------------
   # hooks
   # ----------------------------------------------------------
 
   before ->
-    mock globDir:
-      dir: mock.directory()
-      file: mock.file
-      exe: mock.file mode: 755
-      symlink: mock.symlink path: path
+    sinon.stub proms, 'getStats', (_path) -> typeMap[_path]
+    mock
+      globDir:
+        dir: mock.directory()
+        file: mock.file()
+        exe: mock.file mode: 755
 
   after ->
     mock.restore()
+    proms.getStats.restore()
 
   # ----------------------------------------------------------
   # cases
@@ -33,13 +46,9 @@ describe 'index :', ->
         root: 'globDir/'
         contents:
           file:
-            file: true
+            'globDir/file': true
           dir:
-            dir: true
+            'globDir/dir': true
           exe:
-            exe: true
-          symlink:
-            symlink:
-              target:
-                path: path
-                type: 'file'
+            'globDir/exe': true
+          symlink: {}

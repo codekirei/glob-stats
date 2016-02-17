@@ -55,8 +55,8 @@ function* globStats(glob, opts) {
     function* symlinkHandler() {
       return Object.assign(
         {}
-      , yield linkTarget(path)
       , yield parseStat(stat)
+      , yield linkTarget(path)
       )
     }
 

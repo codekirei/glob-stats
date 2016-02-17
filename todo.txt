@@ -1,9 +1,11 @@
 functionality:
   - err handling
   - remove unnecessary co-wraps (dir-size?)
+  - modularize for easier testing
 
 tests:
   - index
+  - fix missing coverage
 
 meta:
   - docstrings
