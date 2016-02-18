@@ -1,4 +1,2 @@
-meta:
-  - readme
-  - ci
-  - 0.1.0 -> npm publish
+- readme
+- ci
