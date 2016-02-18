@@ -11,7 +11,13 @@ const handlers = require('./lib/handlers')
 const proms = require('./lib/proms')
 const statType = require('./lib/stat-type')
 
-// jsdoc
+/**
+  Generator that reads a glob and filters the results by type.
+
+  @param {String} glob - glob to read
+  @param {Object} [opts] - flags for additional details to include in results
+  @returns {Object} filtered results
+ */
 function* globStats(glob, opts) {
 
   const out =
