@@ -1,6 +1,6 @@
 {
   "name": "glob-stats",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "promisified file globbing with additional stats",
   "main": "index.js",
   "scripts": {
