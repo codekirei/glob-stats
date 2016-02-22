@@ -1,1 +1,2 @@
-- readme
+- nested symlinks?
+- glob array pattern?
